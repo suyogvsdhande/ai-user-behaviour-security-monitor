@@ -13,7 +13,7 @@
 </header>
 <main class="page-shell">
   <section class="hero"><div><p class="eyebrow">Security overview</p><h1>Admin Dashboard</h1><p>A lightweight overview of user activity and security signals.</p></div><div class="status"><span></span> Systems operational</div></section>
-  <aside class="demo-notice"><strong>PHASE 1 PLACEHOLDERS</strong><span>Metrics are illustrative only. Monitoring and risk analysis are not active.</span></aside>
+  <aside class="demo-notice"><strong>PHASE 2 AUDIT LOGGING</strong><span>Activity counts below are database-backed. Risk scoring and security responses are not active.</span></aside>
   <section aria-labelledby="metrics-heading">
     <div class="section-heading"><div><h2 id="metrics-heading">Security Metrics</h2><p>Current demonstration snapshot</p></div><small>Updated just now</small></div>
     <div class="metric-grid">
@@ -21,14 +21,14 @@
       <article class="metric-card info"><i>◉</i><p>Monitored Users</p><strong>—</strong><small>Under observation</small></article>
       <article class="metric-card warning"><i>▲</i><p>Suspicious Users</p><strong>—</strong><small>Review required</small></article>
       <article class="metric-card danger"><i>■</i><p>Blocked Users</p><strong>—</strong><small>Access restricted</small></article>
-      <article class="metric-card"><i>C</i><p>Copy Attempts</p><strong>—</strong><small>Recorded events</small></article>
-      <article class="metric-card info"><i>↓</i><p>Downloads</p><strong>—</strong><small>File activity</small></article>
-      <article class="metric-card"><i>↔</i><p>API Requests</p><strong>—</strong><small>Request volume</small></article>
+      <article class="metric-card"><i>C</i><p>Copy Attempts</p><strong>{{ metrics.copy_attempts }}</strong><small>Recorded events</small></article>
+      <article class="metric-card info"><i>↓</i><p>Downloads</p><strong>{{ metrics.downloads }}</strong><small>File activity</small></article>
+      <article class="metric-card"><i>↔</i><p>API Requests</p><strong>{{ metrics.api_requests }}</strong><small>Request volume</small></article>
       <article class="metric-card danger"><i>!</i><p>High Risk Sessions</p><strong>—</strong><small>Priority events</small></article>
     </div>
   </section>
-  <section class="dashboard-panel"><div><p class="eyebrow">Coming in a later phase</p><h2>Activity monitoring</h2><p>Security alerts, timelines, and risk analysis will appear here after monitoring is implemented.</p></div><span class="phase-badge">Not active</span></section>
+  <section class="activity-panel" aria-labelledby="activity-heading"><div class="section-heading"><div><h2 id="activity-heading">Recent Activity</h2><p>Latest {{ recent_events|length }} database events</p></div><small>Up to 40 events</small></div><div class="table-wrap"><table><thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Screen</th><th>Profile</th><th>IP / Session</th><th>Details</th></tr></thead><tbody>{% for event in recent_events %}<tr><td class="nowrap">{{ event.timestamp.replace('T', ' ') }}</td><td>{{ event.user_id }}</td><td><span class="action-badge">{{ event.action }}</span></td><td>{{ event.screen_name or '—' }}</td><td>{{ event.profile_id or '—' }}</td><td><span class="compact-id">{{ event.ip_address or '—' }}<br>{{ event.session_id or 'no session' }}</span></td><td>{{ event.details_display }}</td></tr>{% else %}<tr><td colspan="7" class="empty-cell">No activity recorded yet. Use the Member Portal to generate demo events.</td></tr>{% endfor %}</tbody></table></div></section><section class="dashboard-panel"><div><p class="eyebrow">Coming in a later phase</p><h2>Risk analysis and responses</h2><p>Risk scores, classifications, alerts, restrictions, and blocking are not implemented.</p></div><span class="phase-badge">Not active</span></section>
 </main>
-<footer><span>Sentinel Security Portal</span><span>Phase 1 · Demonstration environment</span></footer>
+<footer><span>Sentinel Security Portal</span><span>Phase 2 · Audit logging demonstration</span></footer>
 </body>
 </html>
