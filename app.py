@@ -1,8 +1,12 @@
 import json
 import os
+from datetime import datetime, timedelta, timezone
 
 from flask import Flask, abort, jsonify, render_template, request
-from audit_db import count_audit_events, initialize_database, read_recent_audit_events, write_audit_event
+from audit_db import (count_audit_events, count_high_risk_sessions, initialize_database,
+                      read_audit_user_ids, read_recent_audit_events, read_user_events, read_user_risks,
+                      save_user_risk, write_audit_event)
+from risk_engine import calculate_risk
 
 app = Flask(__name__)
 app.config["DATABASE"] = os.environ.get("SECURITY_MONITOR_DATABASE", os.path.join(app.root_path, "data", "security_monitor.db"))
@@ -55,16 +59,32 @@ def log_api_request(context, endpoint):
                       api_endpoint=endpoint, api_request_count=1, details={"method": request.method})
 
 
+def recalculate_user_risk(user_id):
+    now = datetime.now(timezone.utc)
+    since = (now - timedelta(minutes=60)).isoformat(timespec="seconds")
+    events = read_user_events(app.config["DATABASE"], user_id, since)
+    assessment = calculate_risk(events, now=now)
+    assessment["last_activity"] = events[-1]["timestamp"] if events else None
+    save_user_risk(app.config["DATABASE"], user_id, assessment, now.isoformat(timespec="seconds"))
+    return assessment
+
+
 initialize_database(app.config["DATABASE"])
 
 
 @app.get("/")
 def member_directory():
-    return render_template("index.html", members=MEMBERS)
+    if DEMO_USER_ID in read_audit_user_ids(app.config["DATABASE"]):
+        recalculate_user_risk(DEMO_USER_ID)
+    risks = {item["user_id"]: item for item in read_user_risks(app.config["DATABASE"])}
+    risk = risks.get(DEMO_USER_ID, {"risk_score": 0, "risk_level": "LOW", "status": "NORMAL"})
+    return render_template("index.html", members=MEMBERS, risk=risk)
 
 
 @app.get("/admin")
 def admin_dashboard():
+    for user_id in read_audit_user_ids(app.config["DATABASE"]):
+        recalculate_user_risk(user_id)
     events = read_recent_audit_events(app.config["DATABASE"], 40)
     for event in events:
         try:
@@ -75,7 +95,12 @@ def admin_dashboard():
     metrics = {"copy_attempts": count_audit_events(app.config["DATABASE"], "COPY_ATTEMPT"),
                "downloads": count_audit_events(app.config["DATABASE"], "DOWNLOAD"),
                "api_requests": count_audit_events(app.config["DATABASE"], "API_REQUEST")}
-    return render_template("admin.html", metrics=metrics, recent_events=events)
+    risks = read_user_risks(app.config["DATABASE"])
+    since = (datetime.now(timezone.utc) - timedelta(minutes=60)).isoformat(timespec="seconds")
+    metrics.update(monitored_users=len(risks),
+                   suspicious_users=sum(item["risk_score"] >= 31 for item in risks),
+                   high_risk_sessions=count_high_risk_sessions(app.config["DATABASE"], since))
+    return render_template("admin.html", metrics=metrics, recent_events=events, user_risks=risks)
 
 
 @app.post("/api/events")
@@ -105,6 +130,7 @@ def record_event():
             event["details"] = {"duration_seconds": max(0, min(round(duration, 1), 86400))}
         event_id = write_audit_event(app.config["DATABASE"], **event)
         log_api_request(context, "/api/events")
+        recalculate_user_risk(context["user_id"])
     except ValueError as error:
         return jsonify(error=str(error)), 400
     return jsonify(status="recorded", event_id=event_id), 201
@@ -121,6 +147,7 @@ def download_demo_profile(profile_id):
                       profile_id=profile_id, download_attempt=True, download_size=len(body),
                       api_endpoint=request.path, details={"format": "json"})
     log_api_request(context, request.path)
+    recalculate_user_risk(context["user_id"])
     response = app.response_class(body, mimetype="application/json")
     response.headers["Content-Disposition"] = f'attachment; filename="{profile_id}.json"'
     return response
