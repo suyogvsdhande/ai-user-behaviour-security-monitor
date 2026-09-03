@@ -20,7 +20,7 @@ searchInput?.addEventListener("input", () => {
   memberCount.textContent = visible + " sample " + (visible === 1 ? "member" : "members"); emptyState.hidden = visible !== 0;
   clearTimeout(searchTimer); searchTimer = setTimeout(() => logEvent("SEARCH", {search_query: searchInput.value.trim()}), 600);
 });
-document.querySelectorAll(".profile-button").forEach((button) => button.addEventListener("click", () => { document.querySelector("#" + button.dataset.dialog).showModal(); logEvent("PROFILE_VIEW", {profile_id: button.dataset.profileId}); }));
+document.querySelectorAll(".profile-button").forEach((button) => button.addEventListener("click", async () => { const response = await logEvent("PROFILE_VIEW", {profile_id: button.dataset.profileId}); if (response?.ok) document.querySelector("#" + button.dataset.dialog).showModal(); else if (response) alert("This profile view is restricted by the security policy."); }));
 document.querySelectorAll(".profile-dialog").forEach((dialog) => { dialog.querySelector(".close-dialog").addEventListener("click", () => dialog.close()); dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); }); });
 document.addEventListener("copy", () => logEvent("COPY_ATTEMPT"));
 document.querySelectorAll(".download-button").forEach((link) => link.addEventListener("click", () => { const url = new URL(link.href); url.searchParams.set("session_id", sessionId); url.searchParams.set("device_id", deviceId); link.href = url.toString(); }));

@@ -13,14 +13,15 @@
 </header>
 <main class="page-shell">
   <section class="hero"><div><p class="eyebrow">Security overview</p><h1>Admin Dashboard</h1><p>A lightweight overview of user activity and security signals.</p></div><div class="status"><span></span> Systems operational</div></section>
-  <aside class="demo-notice"><strong>PHASE 3 RISK SCORING</strong><span>Scores are explainable and database-backed. Statuses show recommended responses only; no restrictions are enforced.</span></aside>
+  <aside class="demo-notice"><strong>ACTIVE SECURITY POLICY</strong><span>Scores are explainable and database-backed. High-risk sensitive actions are restricted, critical-risk actions are blocked, and rate-limit decisions are audited.</span></aside>
   <section aria-labelledby="metrics-heading">
     <div class="section-heading"><div><h2 id="metrics-heading">Security Metrics</h2><p>Current demonstration snapshot</p></div><small>Updated just now</small></div>
     <div class="metric-grid">
       <article class="metric-card"><i>●</i><p>Active Users</p><strong>—</strong><small>Live sessions</small></article>
       <article class="metric-card info"><i>◉</i><p>Monitored Users</p><strong>{{ metrics.monitored_users }}</strong><small>With risk assessments</small></article>
       <article class="metric-card warning"><i>▲</i><p>Suspicious Users</p><strong>{{ metrics.suspicious_users }}</strong><small>Medium risk or above</small></article>
-      <article class="metric-card danger"><i>■</i><p>Enforced Blocks</p><strong>0</strong><small>Not active in Phase 3</small></article>
+      <article class="metric-card danger"><i>■</i><p>Blocked Actions</p><strong>{{ metrics.blocked_actions }}</strong><small>Critical-risk denials</small></article>
+      <article class="metric-card warning"><i>!</i><p>Restricted Actions</p><strong>{{ metrics.restricted_actions }}</strong><small>High-risk denials</small></article>
       <article class="metric-card"><i>C</i><p>Copy Attempts</p><strong>{{ metrics.copy_attempts }}</strong><small>Recorded events</small></article>
       <article class="metric-card info"><i>↓</i><p>Downloads</p><strong>{{ metrics.downloads }}</strong><small>File activity</small></article>
       <article class="metric-card"><i>↔</i><p>API Requests</p><strong>{{ metrics.api_requests }}</strong><small>Request volume</small></article>
