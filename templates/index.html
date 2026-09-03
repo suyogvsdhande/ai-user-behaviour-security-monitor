@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Demo member directory for the Sentinel security portal.">
+  <title>Member Directory | Sentinel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{{ url_for('member_directory') }}"><span class="brand-mark">S</span><span><strong>Sentinel</strong><small>Secure Member Portal</small></span></a>
+  <nav aria-label="Primary navigation"><a class="nav-link active" href="{{ url_for('member_directory') }}">Members</a><a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></nav>
+</header>
+<main class="page-shell">
+  <section class="hero"><div><p class="eyebrow">Protected directory</p><h1>Member Directory</h1><p>Find and review member contact profiles in this demonstration workspace.</p></div><div class="status"><span></span> Secure session</div></section>
+  <aside class="demo-notice"><strong>DEMO / SAMPLE DATA</strong><span>All names and contact details shown below are fictional and provided for demonstration only.</span></aside>
+  <section aria-labelledby="directory-heading">
+    <div class="section-heading"><div><h2 id="directory-heading">Directory</h2><p id="member-count">10 sample members</p></div><label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Search members</span><input id="member-search" type="search" placeholder="Search name, profession, city…" autocomplete="off"></label></div>
+    <div class="member-grid">
+    {% for member in members %}
+      <article class="member-card" data-search="{{ member.name }} {{ member.profession }} {{ member.city }} {{ member.member_id }}">
+        <div class="card-top"><div class="avatar" aria-hidden="true">{{ member.name.split()[0][0] }}{{ member.name.split()[-1][0] }}</div><span class="member-id">{{ member.member_id }}</span></div>
+        <h3>{{ member.name }}</h3><p class="profession">{{ member.profession }}</p><p class="location"><span>●</span> {{ member.city }}</p>
+        <button class="profile-button" type="button" data-dialog="profile-{{ loop.index }}">View Profile</button>
+      </article>
+      <dialog class="profile-dialog" id="profile-{{ loop.index }}">
+        <header class="dialog-header"><div class="avatar large">{{ member.name.split()[0][0] }}{{ member.name.split()[-1][0] }}</div><div><span class="member-id">{{ member.member_id }}</span><h2>{{ member.name }}</h2><p>{{ member.profession }}</p></div><button class="close-dialog" type="button" aria-label="Close profile">×</button></header>
+        <dl class="profile-details"><div><dt>Member ID</dt><dd>{{ member.member_id }}</dd></div><div><dt>Profession</dt><dd>{{ member.profession }}</dd></div><div><dt>City</dt><dd>{{ member.city }}</dd></div><div><dt>Email</dt><dd>{{ member.email }}</dd></div><div><dt>Phone</dt><dd>{{ member.phone }}</dd></div></dl>
+        <p class="dialog-notice">Demo profile — no real personal information is displayed.</p>
+      </dialog>
+    {% endfor %}
+    </div>
+    <p class="empty-state" id="empty-state" hidden>No members match your search.</p>
+  </section>
+</main>
+<footer><span>Sentinel Security Portal</span><span>Phase 1 · Demonstration environment</span></footer>
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>

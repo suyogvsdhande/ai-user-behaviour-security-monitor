@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sentinel security administration dashboard demonstration.">
+  <title>Admin Dashboard | Sentinel</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="{{ url_for('member_directory') }}"><span class="brand-mark">S</span><span><strong>Sentinel</strong><small>Security Operations</small></span></a>
+  <nav aria-label="Primary navigation"><a class="nav-link" href="{{ url_for('member_directory') }}">Member Portal</a><a class="nav-link active" href="{{ url_for('admin_dashboard') }}">Dashboard</a></nav>
+</header>
+<main class="page-shell">
+  <section class="hero"><div><p class="eyebrow">Security overview</p><h1>Admin Dashboard</h1><p>A lightweight overview of user activity and security signals.</p></div><div class="status"><span></span> Systems operational</div></section>
+  <aside class="demo-notice"><strong>PHASE 1 PLACEHOLDERS</strong><span>Metrics are illustrative only. Monitoring and risk analysis are not active.</span></aside>
+  <section aria-labelledby="metrics-heading">
+    <div class="section-heading"><div><h2 id="metrics-heading">Security Metrics</h2><p>Current demonstration snapshot</p></div><small>Updated just now</small></div>
+    <div class="metric-grid">
+      <article class="metric-card"><i>●</i><p>Active Users</p><strong>—</strong><small>Live sessions</small></article>
+      <article class="metric-card info"><i>◉</i><p>Monitored Users</p><strong>—</strong><small>Under observation</small></article>
+      <article class="metric-card warning"><i>▲</i><p>Suspicious Users</p><strong>—</strong><small>Review required</small></article>
+      <article class="metric-card danger"><i>■</i><p>Blocked Users</p><strong>—</strong><small>Access restricted</small></article>
+      <article class="metric-card"><i>C</i><p>Copy Attempts</p><strong>—</strong><small>Recorded events</small></article>
+      <article class="metric-card info"><i>↓</i><p>Downloads</p><strong>—</strong><small>File activity</small></article>
+      <article class="metric-card"><i>↔</i><p>API Requests</p><strong>—</strong><small>Request volume</small></article>
+      <article class="metric-card danger"><i>!</i><p>High Risk Sessions</p><strong>—</strong><small>Priority events</small></article>
+    </div>
+  </section>
+  <section class="dashboard-panel"><div><p class="eyebrow">Coming in a later phase</p><h2>Activity monitoring</h2><p>Security alerts, timelines, and risk analysis will appear here after monitoring is implemented.</p></div><span class="phase-badge">Not active</span></section>
+</main>
+<footer><span>Sentinel Security Portal</span><span>Phase 1 · Demonstration environment</span></footer>
+</body>
+</html>
