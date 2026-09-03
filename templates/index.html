@@ -14,6 +14,7 @@
 <main class="page-shell">
   <section class="hero"><div><p class="eyebrow">Protected directory</p><h1>Member Directory</h1><p>Find and review member contact profiles in this demonstration workspace.</p></div><div class="status"><span></span> Secure session</div></section>
   <aside class="demo-notice"><strong>DEMO / SAMPLE DATA</strong><span>All names and contact details shown below are fictional and provided for demonstration only.</span></aside>
+  <section class="risk-summary" aria-label="Current demo user risk"><div><span>Current Risk Score</span><strong>{{ risk.risk_score }} <small>/ 100</small></strong></div><span class="risk-badge {{ risk.risk_level|lower }}">{{ risk.risk_level }}</span><span class="status-badge">{{ risk.status }}</span></section>
   <section aria-labelledby="directory-heading">
     <div class="section-heading"><div><h2 id="directory-heading">Directory</h2><p id="member-count">10 sample members</p></div><label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Search members</span><input id="member-search" type="search" placeholder="Search name, profession, city…" autocomplete="off"></label></div>
     <div class="member-grid">
@@ -33,7 +34,7 @@
     <p class="empty-state" id="empty-state" hidden>No members match your search.</p>
   </section>
 </main>
-<footer><span>Sentinel Security Portal</span><span>Phase 2 · Audit logging demonstration</span></footer>
+<footer><span>Sentinel Security Portal</span><span>Phase 3 · Behaviour-based risk scoring</span></footer>
 <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </body>
 </html>
